@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Girl Gamer</title>
+    <style>
+        body {
+            min-width: 50vh;
+            font-family: Arial, sans-serif;
+            background-color: #062520;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background: #ff69b4;
+            padding: 20px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .nav {
+            margin-top: 10px;
+        }
+        .btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: #ff1493;
+        }
+        
+        .container {
+            padding: 20px;
+        }
+        
+        canvas {
+            background: black;
+            display: block;
+            margin: 20px auto;
+        }
+
+        #gameOver {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            font-size: 2em;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        The Girl Gamer
+    </header>
+    
+    <div class="nav">
+        <a class="btn" href="/">Home</a>
+        <button class="btn" onclick="showGameButton()">Let's Play</button>
+    </div>
+    
+    <div class="container" id="gameButtonContainer" style="display: none;">
+        <button class="btn" onclick="startGame()">Snakery Icecream</button>
+    </div>
+    
+    <div class="container" id="gameContainer" style="display: none;">
+        <h2>Snakery Icecream</h2>
+        <p>Snake Game: The snake eats ice creams 🍦 to earn 5 points each. Try to get the highest score!</p>
+        
+        <p>Score: <span id="score">0</span></p>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <button class="btn" onclick="resetGame()" id="playAgainBtn" style="display: none;">Play Again</button>
+    </div>
+    
+    <div id="gameOver">Game Over!</div>
+    
+    <footer>
+        &copy; 2025 The Girl Gamer | All Rights Reserved | Developed by Srija
+    </footer>
+    
+    <script>
+        function showGameButton() {
+            document.getElementById("gameButtonContainer").style.display = "block";
+        }
+
+        function startGame() {
+            document.getElementById("gameButtonContainer").style.display = "none";
+            document.getElementById("gameContainer").style.display = "block";
+            document.getElementById("gameOver").style.display = "none";
+            document.getElementById("playAgainBtn").style.display = "none";
+            initGame();
+        }
+        
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const box = 20;
+        let snake = [{ x: 10 * box, y: 10 * box }];
+        let direction = "RIGHT";
+        let food = generateFood();
+        let score = 0;
+        let gameRunning = false;
+        
+        function generateFood() {
+            return {
+                x: Math.floor(Math.random() * 20) * box,
+                y: Math.floor(Math.random() * 20) * box,
+            };
+        }
+
+        function initGame() {
+            gameRunning = true;
+            snake = [{ x: 10 * box, y: 10 * box }];
+            direction = "RIGHT";
+            food = generateFood();
+            document.getElementById("score").innerText = score;
+            document.addEventListener("keydown", changeDirection);
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+            setTimeout(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawFood();
+                moveSnake();
+                drawSnake();
+                gameLoop();
+            }, 200);
+        }
+
+        function drawSnake() {
+            snake.forEach((segment) => {
+                ctx.fillStyle = "yellow";
+                ctx.fillRect(segment.x, segment.y, box, box);
+            });
+        }
+
+        function drawFood() {
+            ctx.font = "20px Arial";
+            ctx.fillText("🍦", food.x, food.y + 20);
+        }
+
+        function moveSnake() {
+            let head = { ...snake[0] };
+            if (direction === "LEFT") head.x -= box;
+            if (direction === "RIGHT") head.x += box;
+            if (direction === "UP") head.y -= box;
+            if (direction === "DOWN") head.y += box;
+            
+            if (head.x === food.x && head.y === food.y) {
+                score += 5;
+                document.getElementById("score").innerText = score;
+                food = generateFood();
+            } else {
+                snake.pop();
+            }
+            
+            if (head.x < 0 || head.y < 0 || head.x >= canvas.width || head.y >= canvas.height || collision(head)) {
+                gameOver();
+                return;
+            }
+            
+            snake.unshift(head);
+        }
+
+        function collision(head) {
+            return snake.some((segment, index) => index !== 0 && segment.x === head.x && segment.y === head.y);
+        }
+
+        function changeDirection(event) {
+            const key = event.key;
+            if (key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+            if (key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+            if (key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+            if (key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById("gameOver").style.display = "block";
+            document.getElementById("playAgainBtn").style.display = "block";
+        }
+
+        function resetGame() {
+            document.getElementById("gameOver").style.display = "none";
+            document.getElementById("playAgainBtn").style.display = "none";
+            startGame();
+        }
+    </script>
+</body>
+</html>
