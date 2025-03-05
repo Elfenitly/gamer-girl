@@ -12,33 +12,51 @@
             text-align: center;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        
+
+        nav {
+            background: #ff69b4;
+            padding: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
         header {
             background: #ff69b4;
             padding: 20px;
             font-size: 2em;
             font-weight: bold;
         }
-        
+
         .container {
             padding: 20px;
+            flex: 1;
         }
-        
+
         .welcome {
             font-size: 1.8em;
             font-weight: bold;
             color: #ff69b4;
             margin: 20px 0;
         }
-        
+
         .bio {
             font-size: 1.2em;
             max-width: 600px;
             margin: auto;
             line-height: 1.5;
         }
-        
+
         .btn {
             background: #ff69b4;
             color: white;
@@ -49,18 +67,18 @@
             font-size: 1em;
             border-radius: 5px;
         }
-        
+
         .btn:hover {
             background: #ff1493;
         }
-        
+
         footer {
             margin-top: 20px;
             padding: 10px;
             background: #ff69b4;
             color: white;
         }
-        
+
         @media (max-width: 600px) {
             .welcome {
                 font-size: 1.5em;
@@ -73,16 +91,22 @@
     </style>
 </head>
 <body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
     <header>
         The Girl Gamer
     </header>
-    
+
     <div class="container">
         <p class="welcome">A COMMUNITY WHERE ALL GAMER GIRLS ARE WELCOMED</p>
         <p class="bio">Welcome to The Girl Gamer community! We are a space where every gamer girl can feel at home, share experiences, and enjoy gaming together. Whether you're a casual or competitive gamer, this is your place to shine!</p>
         <button class="btn" onclick="window.location.href='game.html'">Let's Play</button>
     </div>
-    
+
     <footer>
         &copy; 2025 The Girl Gamer | All Rights Reserved | Developed by Srija
     </footer>
